@@ -1,0 +1,275 @@
+-- ════════════════════════════════════════════════════════════════
+--  Eddie's Steal a Brainrot  |  Full-Screen Loading Splash
+--  Build  : 2026.10.13.4
+--  Duration: 55s
+-- ════════════════════════════════════════════════════════════════
+
+local DURATION       = 55
+local BRAND_NAME     = "Eddie's Steal a Brainrot"
+local BRAND_TAG      = "Premium  ·  Universal"
+local CREDIT_LINE    = "Credits to Eddie"
+local SHOW_PERCENT   = true
+local SHOW_STEPS     = true
+
+local Players          = game:GetService("Players")
+local RunService       = game:GetService("RunService")
+local TweenService     = game:GetService("TweenService")
+local CoreGui          = game:GetService("CoreGui")
+local LocalPlayer      = Players.LocalPlayer
+
+local function getParent()
+    local ok, ui = pcall(function() return gethui and gethui() end)
+    if ok and ui then return ui end
+    local ok2, core = pcall(function() return CoreGui end)
+    if ok2 and core then return core end
+    return LocalPlayer:WaitForChild("PlayerGui")
+end
+
+pcall(function()
+    for _, g in ipairs(getParent():GetChildren()) do
+        if g.Name == "PremiumLoadingScreen" then g:Destroy() end
+    end
+end)
+
+local C = {
+    bg      = Color3.fromRGB(10, 10, 16),
+    deep    = Color3.fromRGB(16, 16, 26),
+    accent  = Color3.fromRGB(255, 200, 80),
+    accentB = Color3.fromRGB(180, 130, 40),
+    accentS = Color3.fromRGB(255, 225, 150),
+    text    = Color3.fromRGB(245, 240, 220),
+    dim     = Color3.fromRGB(140, 130, 110),
+    border  = Color3.fromRGB(70, 60, 40),
+    green   = Color3.fromRGB(120, 230, 160),
+}
+
+local function corner(o, r)
+    local c = Instance.new("UICorner", o)
+    c.CornerRadius = UDim.new(0, r or 10)
+    return c
+end
+local function stroke(o, col, thick, trans)
+    local s = Instance.new("UIStroke", o)
+    s.Color = col or C.border
+    s.Thickness = thick or 1
+    s.Transparency = trans or 0
+    s.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    return s
+end
+local function gradient(o, c1, c2, rot)
+    local g = Instance.new("UIGradient", o)
+    g.Color = ColorSequence.new(c1, c2)
+    g.Rotation = rot or 0
+    return g
+end
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "PremiumLoadingScreen"
+gui.ResetOnSpawn = false
+gui.DisplayOrder = 2000
+gui.IgnoreGuiInset = true
+gui.Parent = getParent()
+
+local root = Instance.new("Frame", gui)
+root.Size = UDim2.new(1, 0, 1, 0)
+root.BackgroundColor3 = C.bg
+root.BorderSizePixel = 0
+
+local bgGrad = Instance.new("UIGradient", root)
+bgGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, C.bg),
+    ColorSequenceKeypoint.new(0.5, C.deep),
+    ColorSequenceKeypoint.new(1, C.bg),
+})
+bgGrad.Rotation = 135
+
+local scan = Instance.new("Frame", root)
+scan.Size = UDim2.new(1, 0, 0, 2)
+scan.Position = UDim2.new(0, 0, 0, -10)
+scan.BackgroundColor3 = C.accent
+scan.BorderSizePixel = 0
+scan.BackgroundTransparency = 0.4
+gradient(scan, C.accentS, C.accentB, 0)
+TweenService:Create(scan, TweenInfo.new(2.5, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true), {
+    Position = UDim2.new(0, 0, 1, 0)
+}):Play()
+
+local glow = Instance.new("Frame", root)
+glow.AnchorPoint = Vector2.new(0.5, 0.5)
+glow.Position = UDim2.new(0.5, 0, 0.45, 0)
+glow.Size = UDim2.new(0, 600, 0, 600)
+glow.BackgroundColor3 = C.accentB
+glow.BackgroundTransparency = 0.88
+glow.BorderSizePixel = 0
+corner(glow, 999)
+TweenService:Create(glow, TweenInfo.new(3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
+    BackgroundTransparency = 0.75,
+    Size = UDim2.new(0, 700, 0, 700),
+}):Play()
+
+local mark = Instance.new("Frame", root)
+mark.AnchorPoint = Vector2.new(0.5, 0.5)
+mark.Position = UDim2.new(0.5, 0, 0.38, 0)
+mark.Size = UDim2.new(0, 0, 0, 0)
+mark.BackgroundColor3 = C.accentB
+mark.BorderSizePixel = 0
+corner(mark, 22)
+gradient(mark, C.accentS, C.accentB, 45)
+
+local markTxt = Instance.new("TextLabel", mark)
+markTxt.Size = UDim2.new(1,0,1,0)
+markTxt.BackgroundTransparency = 1
+markTxt.Text = "E"
+markTxt.TextColor3 = C.bg
+markTxt.Font = Enum.Font.GothamBlack
+markTxt.TextSize = 54
+
+local ring = Instance.new("Frame", mark)
+ring.AnchorPoint = Vector2.new(0.5, 0.5)
+ring.Position = UDim2.new(0.5, 0, 0.5, 0)
+ring.Size = UDim2.new(1, 40, 1, 40)
+ring.BackgroundTransparency = 1
+ring.BorderSizePixel = 0
+corner(ring, 999)
+local ringStroke = Instance.new("UIStroke", ring)
+ringStroke.Color = C.accent
+ringStroke.Thickness = 2
+ringStroke.Transparency = 0.3
+
+TweenService:Create(ring, TweenInfo.new(1.2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, false), {
+    Rotation = 360
+}):Play()
+TweenService:Create(mark, TweenInfo.new(0.7, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+    Size = UDim2.new(0, 100, 0, 100)
+}):Play()
+
+local title = Instance.new("TextLabel", root)
+title.AnchorPoint = Vector2.new(0.5, 0)
+title.Position = UDim2.new(0.5, 0, 0.52, 0)
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundTransparency = 1
+title.Text = BRAND_NAME
+title.TextColor3 = C.text
+title.Font = Enum.Font.GothamBlack
+title.TextSize = 24
+
+local tagLbl = Instance.new("TextLabel", root)
+tagLbl.AnchorPoint = Vector2.new(0.5, 0)
+tagLbl.Position = UDim2.new(0.5, 0, 0.52, 34)
+tagLbl.Size = UDim2.new(1, 0, 0, 16)
+tagLbl.BackgroundTransparency = 1
+tagLbl.Text = BRAND_TAG
+tagLbl.TextColor3 = C.accent
+tagLbl.Font = Enum.Font.GothamBold
+tagLbl.TextSize = 11
+
+local track = Instance.new("Frame", root)
+track.AnchorPoint = Vector2.new(0.5, 0)
+track.Position = UDim2.new(0.5, 0, 0.62, 0)
+track.Size = UDim2.new(0.55, 0, 0, 8)
+track.BackgroundColor3 = C.deep
+track.BorderSizePixel = 0
+corner(track, 4)
+stroke(track, C.border, 1, 0.4)
+
+local fill = Instance.new("Frame", track)
+fill.Size = UDim2.new(0, 0, 1, 0)
+fill.BackgroundColor3 = C.accent
+fill.BorderSizePixel = 0
+corner(fill, 4)
+gradient(fill, C.accentS, C.accentB, 0)
+
+local pct = Instance.new("TextLabel", root)
+pct.AnchorPoint = Vector2.new(0.5, 0)
+pct.Position = UDim2.new(0.5, 0, 0.66, 0)
+pct.Size = UDim2.new(1, 0, 0, 16)
+pct.BackgroundTransparency = 1
+pct.Text = "0%"
+pct.TextColor3 = C.accent
+pct.Font = Enum.Font.GothamBold
+pct.TextSize = 12
+pct.Visible = SHOW_PERCENT
+
+local stepLbl = Instance.new("TextLabel", root)
+stepLbl.AnchorPoint = Vector2.new(0.5, 0)
+stepLbl.Position = UDim2.new(0.5, 0, 0.685, 0)
+stepLbl.Size = UDim2.new(1, 0, 0, 14)
+stepLbl.BackgroundTransparency = 1
+stepLbl.Text = "Initialising..."
+stepLbl.TextColor3 = C.dim
+stepLbl.Font = Enum.Font.Gotham
+stepLbl.TextSize = 11
+stepLbl.Visible = SHOW_STEPS
+
+local credit = Instance.new("TextLabel", root)
+credit.AnchorPoint = Vector2.new(0.5, 1)
+credit.Position = UDim2.new(0.5, 0, 1, -30)
+credit.Size = UDim2.new(1, 0, 0, 14)
+credit.BackgroundTransparency = 1
+credit.Text = CREDIT_LINE
+credit.TextColor3 = C.dim
+credit.Font = Enum.Font.Gotham
+credit.TextSize = 10
+
+local stepPhrases = {
+    "Loading core",
+    "Initialising services",
+    "Connecting to server",
+    "Building interface",
+    "Loading modules",
+    "Compiling runtime",
+    "Mounting assets",
+    "Hooking input",
+    "Preparing scripts",
+    "Finalising",
+}
+
+local elapsed = 0
+local lastStep = -1
+local startTime = tick()
+
+while true do
+    task.wait(0.05)
+    elapsed = tick() - startTime
+    local progress = math.clamp(elapsed / DURATION, 0, 1)
+
+    fill.Size = UDim2.new(progress, 0, 1, 0)
+    if SHOW_PERCENT then
+        pct.Text = math.floor(progress * 100) .. "%"
+    end
+
+    if SHOW_STEPS then
+        local stepIdx = math.floor(progress * #stepPhrases) + 1
+        if stepIdx > #stepPhrases then stepIdx = #stepPhrases end
+        if stepIdx ~= lastStep then
+            lastStep = stepIdx
+            stepLbl.Text = stepPhrases[stepIdx] .. "..."
+        end
+    end
+
+    if elapsed >= DURATION then break end
+end
+
+stepLbl.Text = "Ready"
+stepLbl.TextColor3 = C.green
+pct.Text = "100%"
+task.wait(0.6)
+
+TweenService:Create(root, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+    BackgroundTransparency = 1,
+}):Play()
+for _, d in ipairs(root:GetDescendants()) do
+    pcall(function()
+        if d:IsA("TextLabel") then
+            TweenService:Create(d, TweenInfo.new(0.4), { TextTransparency = 1 }):Play()
+        elseif d:IsA("Frame") then
+            TweenService:Create(d, TweenInfo.new(0.4), { BackgroundTransparency = 1 }):Play()
+        elseif d:IsA("UIStroke") then
+            TweenService:Create(d, TweenInfo.new(0.4), { Transparency = 1 }):Play()
+        end
+    end)
+end
+task.wait(0.55)
+gui:Destroy()
+
+print("[Eddie's Steal a Brainrot] Loading screen finished | Credits to Eddie")
